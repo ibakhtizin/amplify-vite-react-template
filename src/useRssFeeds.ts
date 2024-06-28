@@ -16,6 +16,37 @@ export function useRssFeeds() {
         },
     });
 
+    const updateRssFeed = useMutation({
+        mutationFn: async ({ id, updates }: { id: string; updates: Partial<Schema["RssFeed"]["type"]> }) => {
+            const { data: updatedFeed } = await client.models.RssFeed.update({
+                id,
+                ...updates,
+            });
+            return updatedFeed;
+        },
+        onMutate: async ({ id, updates }) => {
+            await queryClient.cancelQueries({ queryKey: ["rssFeeds"] });
+            const previousRssFeeds = queryClient.getQueryData<Schema["RssFeed"]["type"][]>(["rssFeeds"]);
+            if (previousRssFeeds) {
+                queryClient.setQueryData<Schema["RssFeed"]["type"][]>(
+                    ["rssFeeds"],
+                    previousRssFeeds.map(feed =>
+                        feed.id === id ? { ...feed, ...updates } : feed
+                    )
+                );
+            }
+            return { previousRssFeeds };
+        },
+        onError: (_err, _newFeed, context) => {
+            if (context?.previousRssFeeds) {
+                queryClient.setQueryData(["rssFeeds"], context.previousRssFeeds);
+            }
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: ["rssFeeds"] });
+        },
+    });
+
     const addRssFeed = useMutation({
         mutationFn: async (url: string) => {
             const { data: newRssFeed } = await client.models.RssFeed.create({
@@ -78,5 +109,6 @@ export function useRssFeeds() {
         isError,
         addRssFeed: addRssFeed.mutate,
         deleteRssFeed: deleteRssFeed.mutate,
+        updateRssFeed: updateRssFeed.mutate,
     };
 }

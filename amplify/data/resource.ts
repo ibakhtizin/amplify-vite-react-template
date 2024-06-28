@@ -14,6 +14,7 @@ const schema = a.schema({
             description: a.string(),
             lastUpdated: a.datetime(),
             feedLastUpdated: a.datetime(),
+            forwardingUrl: a.string(),
             isActive: a.boolean().default(true),
             ownerId: a.string(),
         })
