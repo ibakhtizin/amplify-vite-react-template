@@ -19,7 +19,7 @@ export const handler: Schema["stripeCreateCheckoutSession"]["functionHandler"] =
             payment_method_types: ['card'],
             line_items: [
                 {
-                    price: 'price_1PWmNPBKw8nx4YDvoBAGBFQK', // You'll need to set this environment variable
+                    price: process.env.STRIPE_PRICE_ID!,
                     quantity: 1,
                 },
             ],
