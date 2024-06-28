@@ -1,12 +1,6 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 
 const schema = a.schema({
-    Todo: a
-        .model({
-            content: a.string(),
-        })
-        .authorization((allow) => [allow.owner()]),
-
     RssFeed: a
         .model({
             url: a.string().required(),
@@ -19,7 +13,18 @@ const schema = a.schema({
             ownerId: a.string(),
         })
         .authorization((allow) => [
-            allow.owner(),
+            allow.owner()
+        ]),
+
+    UserSubscription: a
+        .model({
+            userId: a.string().required(),
+            isPro: a.boolean().required(),
+            expiresAt: a.datetime(),
+            stripeCustomerId: a.string(),
+        })
+        .authorization((allow) => [
+            allow.owner()
         ]),
 });
 
@@ -31,6 +36,7 @@ export const data = defineData({
         defaultAuthorizationMode: 'userPool',
         // API Key is used for a.allow.public() rules
         apiKeyAuthorizationMode: {
-            expiresInDays: 30    },
+            expiresInDays: 30
+        },
     },
 });
