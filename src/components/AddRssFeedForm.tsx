@@ -18,26 +18,30 @@ export function AddRssFeedForm() {
     const canAddMoreFeeds = (rssFeeds?.length || 0) < feedLimit;
 
     const validateAndAddRssFeed = () => {
+        if (!canAddMoreFeeds) {
+            setIsSubscriptionDialogOpen(true);
+            return;
+        }
+
         const url = newRssFeedUrl.trim();
-        if (url) {
-            if (url.startsWith("https://www.upwork.com/ab/feed/jobs")) {
-                try {
-                    new URL(url);
-                    setInputError("");
-                    if (canAddMoreFeeds) {
-                        addRssFeed(url);
-                        setNewRssFeedUrl("");
-                    } else {
-                        setIsSubscriptionDialogOpen(true);
-                    }
-                } catch (e) {
-                    setInputError("Invalid URL format");
-                }
-            } else {
-                setInputError("URL must start with https://www.upwork.com/ab/feed/jobs");
-            }
-        } else {
+
+        if (!url) {
             setInputError("Please enter a URL");
+            return;
+        }
+
+        if (!url.startsWith("https://www.upwork.com/ab/feed/jobs")) {
+            setInputError("URL must start with https://www.upwork.com/ab/feed/jobs");
+            return;
+        }
+
+        try {
+            new URL(url);
+            setInputError("");
+            addRssFeed(url);
+            setNewRssFeedUrl("");
+        } catch (e) {
+            setInputError("Invalid URL format");
         }
     };
 

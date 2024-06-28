@@ -20,6 +20,13 @@ export function useSubscription() {
         },
     });
 
+    const createStripeCheckoutSession = useMutation({
+        mutationFn: async () => {
+            const response = await client.mutations.stripeCreateCheckoutSession();
+            return response.data;
+        },
+    });
+
     const updateSubscription = useMutation({
         mutationFn: async ({ isPro, expiresAt }: { isPro: boolean; expiresAt?: string }) => {
             const { userId } = await getCurrentUser();
@@ -47,10 +54,19 @@ export function useSubscription() {
     });
 
     const upgradeToProAction = async () => {
-        // This is where you'd integrate with your payment processor (e.g., Stripe)
-        // For now, we'll just simulate an upgrade
-        const oneMonthFromNow = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
-        await updateSubscription.mutateAsync({ isPro: true, expiresAt: oneMonthFromNow });
+        try {
+            const checkoutSession = await createStripeCheckoutSession.mutateAsync();
+
+            // Redirect to Stripe Checkout
+            if (checkoutSession?.url) {
+                window.location.href = checkoutSession.url;
+            } else {
+                throw new Error("Failed to create checkout session");
+            }
+        } catch (error) {
+            console.error("Error creating Stripe checkout session:", error);
+            throw error;
+        }
     };
 
     const cancelSubscriptionAction = async () => {

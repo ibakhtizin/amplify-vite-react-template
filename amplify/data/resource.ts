@@ -1,4 +1,5 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+import {stripeCheckoutHandler} from "../functions/stripe-create-checkout-session/resource";
 
 const schema = a.schema({
     RssFeed: a
@@ -26,6 +27,18 @@ const schema = a.schema({
         .authorization((allow) => [
             allow.owner()
         ]),
+
+    StripeCheckoutSessionResponse: a.customType({
+        sessionId: a.string(),
+        url: a.string()
+    }),
+
+    // Define your mutation
+    stripeCreateCheckoutSession: a
+        .mutation()
+        .returns(a.ref('StripeCheckoutSessionResponse'))
+        .authorization(allow => [allow.authenticated()])
+        .handler(a.handler.function(stripeCheckoutHandler))
 });
 
 export type Schema = ClientSchema<typeof schema>;
