@@ -28,6 +28,8 @@ const schema = a.schema({
             allow.owner()
         ]),
 
+
+
     StripeCheckoutSessionResponse: a.customType({
         sessionId: a.string(),
         url: a.string()
@@ -36,6 +38,9 @@ const schema = a.schema({
     // Define your mutation
     stripeCreateCheckoutSession: a
         .mutation()
+        .arguments({
+            email: a.string().required(),
+        })
         .returns(a.ref('StripeCheckoutSessionResponse'))
         .authorization(allow => [allow.authenticated()])
         .handler(a.handler.function(stripeCheckoutHandler))

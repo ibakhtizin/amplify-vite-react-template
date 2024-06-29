@@ -22,7 +22,10 @@ export function useSubscription() {
 
     const createStripeCheckoutSession = useMutation({
         mutationFn: async () => {
-            const response = await client.mutations.stripeCreateCheckoutSession();
+            const user = await getCurrentUser();
+            const email = user?.signInDetails?.loginId ?? '';
+
+            const response = await client.mutations.stripeCreateCheckoutSession({email});
             return response.data;
         },
     });

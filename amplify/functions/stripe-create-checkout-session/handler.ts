@@ -10,12 +10,6 @@ export const handler: Schema["stripeCreateCheckoutSession"]["functionHandler"] =
     console.log('Stripe Create Checkout Session Event:', JSON.stringify(event, null, 2));
     console.log('Context:', JSON.stringify(context, null, 2));
 
-    const { username, userId, signInDetails } = await getCurrentUser();
-
-    console.log("username", username);
-    console.log("user id", userId);
-    console.log("sign-in details", signInDetails);
-
     const frontendUrl = process.env.FRONTEND_URL ?? 'https://google.com';
 
     try {
@@ -30,7 +24,7 @@ export const handler: Schema["stripeCreateCheckoutSession"]["functionHandler"] =
             ],
             mode: 'subscription',
             success_url: `${frontendUrl}/subscription-success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${frontendUrl}/subscription-cancelled`,
+            cancel_url: `${frontendUrl}/checkout-cancelled`,
             client_reference_id: identity.username, // Assuming you're passing userId in the context
             customer_email: 'iskandar100@gmail.com'
         });
