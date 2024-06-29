@@ -13,16 +13,22 @@ export function RssFeedList() {
 
     return (
         <>
-            <ul className="space-y-4">
-                {rssFeeds?.map((feed) => (
-                    <RssItemCard
-                        key={feed.id}
-                        feed={feed as RssFeed}
-                        onDelete={deleteRssFeed}
-                        onUpdate={(id, updates) => updateRssFeed({ id, updates })}
-                    />
-                ))}
-            </ul>
+            {rssFeeds?.length === 0 ? (
+                <div className="text-center py-8">
+                    <p className="text-lg text-gray-600">No RSS feeds added yet. Add your first feed to get started!</p>
+                </div>
+            ) : (
+                <ul className="space-y-4">
+                    {rssFeeds?.map((feed) => (
+                        <RssItemCard
+                            key={feed.id}
+                            feed={feed as RssFeed}
+                            onDelete={deleteRssFeed}
+                            onUpdate={(id, updates) => updateRssFeed({ id, updates })}
+                        />
+                    ))}
+                </ul>
+            )}
             <SubscriptionDialog
                 isOpen={isSubscriptionDialogOpen}
                 onClose={() => setIsSubscriptionDialogOpen(false)}

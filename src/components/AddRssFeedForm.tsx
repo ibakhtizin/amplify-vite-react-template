@@ -1,4 +1,3 @@
-// AddRssFeedForm.tsx
 import { useState } from 'react';
 import { useRssFeeds } from '../hooks/useRssFeeds';
 import { Input } from "@/components/ui/input";
@@ -6,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { SubscriptionDialog } from './SubscriptionDialog';
 import { useSubscription } from '../hooks/useSubscription';
+import { useFeatureFlags } from '../hooks/useFeatureFlags';
 
 export function AddRssFeedForm() {
     const [newRssFeedUrl, setNewRssFeedUrl] = useState("");
@@ -13,12 +13,13 @@ export function AddRssFeedForm() {
     const { addRssFeed, rssFeeds } = useRssFeeds();
     const { isPro } = useSubscription();
     const [isSubscriptionDialogOpen, setIsSubscriptionDialogOpen] = useState(false);
+    const { enforceSubscription } = useFeatureFlags();
 
-    const feedLimit = isPro ? Infinity : 2;
+    const feedLimit = isPro || !enforceSubscription ? Infinity : 2;
     const canAddMoreFeeds = (rssFeeds?.length || 0) < feedLimit;
 
     const validateAndAddRssFeed = () => {
-        if (!canAddMoreFeeds) {
+        if (!canAddMoreFeeds && enforceSubscription) {
             setIsSubscriptionDialogOpen(true);
             return;
         }
@@ -58,7 +59,7 @@ export function AddRssFeedForm() {
                     placeholder="Enter new RSS feed URL"
                 />
                 <Button onClick={validateAndAddRssFeed}>
-                    {canAddMoreFeeds ? "+ Add Feed" : "Upgrade to Add More"}
+                    {canAddMoreFeeds || !enforceSubscription ? "+ Add Feed" : "Upgrade to Add More"}
                 </Button>
             </div>
             {inputError && (
@@ -66,7 +67,7 @@ export function AddRssFeedForm() {
                     <AlertDescription>{inputError}</AlertDescription>
                 </Alert>
             )}
-            {!canAddMoreFeeds && (
+            {!canAddMoreFeeds && enforceSubscription && (
                 <Alert className="mt-2">
                     <AlertDescription>
                         You've reached the limit of {feedLimit} feeds. Upgrade to add more!
