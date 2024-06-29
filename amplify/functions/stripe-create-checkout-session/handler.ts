@@ -1,15 +1,20 @@
 // amplify/data/stripe-checkout-handler/handler.ts
 import type { Schema } from '../../data/resource'
 import Stripe from 'stripe';
+import { getCurrentUser } from 'aws-amplify/auth';
 import {AppSyncIdentityCognito} from "aws-lambda/trigger/appsync-resolver";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2024-06-20' // Use the latest API version
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {apiVersion: '2024-06-20'});
 
 export const handler: Schema["stripeCreateCheckoutSession"]["functionHandler"] = async (event, context) => {
     console.log('Stripe Create Checkout Session Event:', JSON.stringify(event, null, 2));
     console.log('Context:', JSON.stringify(context, null, 2));
+
+    const { username, userId, signInDetails } = await getCurrentUser();
+
+    console.log("username", username);
+    console.log("user id", userId);
+    console.log("sign-in details", signInDetails);
 
     const frontendUrl = process.env.FRONTEND_URL ?? 'https://google.com';
 
@@ -27,6 +32,7 @@ export const handler: Schema["stripeCreateCheckoutSession"]["functionHandler"] =
             success_url: `${frontendUrl}/subscription-success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${frontendUrl}/subscription-cancelled`,
             client_reference_id: identity.username, // Assuming you're passing userId in the context
+            customer_email: 'iskandar100@gmail.com'
         });
 
         return {
