@@ -29,7 +29,6 @@ const schema = a.schema({
         ]),
 
 
-
     StripeCheckoutSessionResponse: a.customType({
         sessionId: a.string(),
         url: a.string()
