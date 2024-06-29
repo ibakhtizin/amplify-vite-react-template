@@ -56,10 +56,10 @@ export function RssItemCard({ feed, onDelete, onUpdate }: RssItemCardProps) {
 
     return (
         <Card className="hover:shadow-md transition-shadow">
-            <CardHeader>
+            <CardHeader className="pb-2">
                 <CardTitle className="flex justify-between items-center">
-                    <span className="truncate">{parsedQuery?.q}</span>
-                    <div className="flex items-center space-x-2">
+                    <span className="truncate leading-normal" title={parsedQuery?.q}>{parsedQuery?.q}</span>
+                    <div className="flex items-center space-x-2 ml-2 flex-shrink-0">
                         <Switch
                             checked={feed.isActive ?? false}
                             onCheckedChange={(checked) => handleActiveToggle(checked)}
@@ -74,18 +74,17 @@ export function RssItemCard({ feed, onDelete, onUpdate }: RssItemCardProps) {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="flex flex-wrap gap-2 mb-2">
-                    if (parsedQuery)
-                        {Object.entries(parsedQuery!).map(([key, value]) => (
-                                key !== 'q' && (
-                                    <Badge key={key} variant="secondary">
-                                        {key}: {value}
-                                    </Badge>
-                                )
-                            ))}
+                <div className="flex flex-wrap gap-2 mb-2 overflow-hidden">
+                    {parsedQuery && Object.entries(parsedQuery).map(([key, value]) => (
+                        key !== 'q' && (
+                            <Badge key={key} variant="secondary" className="max-w-full truncate">
+                                <span className="truncate">{key}: {value}</span>
+                            </Badge>
+                        )
+                    ))}
                 </div>
                 <div className="flex items-center space-x-2 mb-2">
-                    <Link className="h-4 w-4" />
+                    <Link className="h-4 w-4 flex-shrink-0" />
                     {isEditing ? (
                         <Input
                             value={feed.forwardingUrl || ''}
@@ -96,8 +95,9 @@ export function RssItemCard({ feed, onDelete, onUpdate }: RssItemCardProps) {
                         />
                     ) : (
                         <span
-                            className="flex-grow cursor-pointer hover:underline"
+                            className="flex-grow cursor-pointer hover:underline truncate"
                             onClick={() => setIsEditing(true)}
+                            title={feed.forwardingUrl || 'Click to add forwarding URL'}
                         >
                             {feed.forwardingUrl || 'Click to add forwarding URL'}
                         </span>
