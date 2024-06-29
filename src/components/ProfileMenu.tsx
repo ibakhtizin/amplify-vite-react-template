@@ -10,14 +10,16 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx";
 import {AuthUser} from "aws-amplify/auth";
+import {Badge} from "@/components/ui/badge.tsx";
 
 
 interface ProfileMenuProps {
     user: AuthUser | undefined;
     signOut: () => void;
+    isPro: boolean;
 }
 
-export function ProfileMenu({ user, signOut }: ProfileMenuProps) {
+export function ProfileMenu({ user, signOut, isPro }: ProfileMenuProps) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -37,7 +39,16 @@ export function ProfileMenu({ user, signOut }: ProfileMenuProps) {
                         </p>
                     </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator/>
+                <DropdownMenuItem>
+                    <div className="flex mt-2">
+                        <p>Plan:</p>
+                        <Badge variant={isPro ? "default" : "secondary"}>
+                            {isPro ? "Pro" : "Standard"}
+                        </Badge>
+                    </div>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator/>
                 <DropdownMenuItem onClick={signOut}>
                     Sign out
                 </DropdownMenuItem>
