@@ -12,10 +12,12 @@ export function useSubscription() {
     const { data: userSubscription, isLoading, isError } = useQuery({
         queryKey: ["userSubscription"],
         queryFn: async () => {
+            console.log('START userSubscriptionuserSubscriptionuserSubscription')
             const { userId } = await getCurrentUser();
             const response = await client.models.UserSubscription.list({
                 filter: { userId: { eq: userId } }
             });
+            console.log('END userSubscriptionuserSubscriptionuserSubscription')
             return response.data[0] || { userId, isPro: false, expiresAt: null };
         },
     });
@@ -63,13 +65,14 @@ export function useSubscription() {
             // Redirect to Stripe Checkout
             if (checkoutSession?.url) {
                 window.location.href = checkoutSession.url;
-            } else {
-                throw new Error("Failed to create checkout session");
+                return;
             }
         } catch (error) {
             console.error("Error creating Stripe checkout session:", error);
             throw error;
         }
+
+        throw new Error("Failed to create checkout session");
     };
 
     const cancelSubscriptionAction = async () => {
