@@ -10,10 +10,10 @@ function SubscriptionSuccess() {
     // const { confirmSubscription } = useSubscription();
 
     useEffect(() => {
-        // const searchParams = new URLSearchParams(location.search);
-        // const sessionId = searchParams.get('session_id');
+        const searchParams = new URLSearchParams(location.search);
+        const sessionId = searchParams.get('session_id');
 
-        setMessage('Subscription confirmed! Redirecting...');
+        setMessage(`Subscription confirmed! session id: ${sessionId} Redirecting...`);
         setTimeout(() => navigate('/'), 3000); // Redirect to home after 3 seconds
         //
         // if (sessionId) {

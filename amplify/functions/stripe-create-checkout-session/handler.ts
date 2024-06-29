@@ -1,7 +1,7 @@
 // amplify/data/stripe-checkout-handler/handler.ts
 import type { Schema } from '../../data/resource'
 import Stripe from 'stripe';
-import { getCurrentUser } from 'aws-amplify/auth';
+// import { getCurrentUser } from 'aws-amplify/auth';
 import {AppSyncIdentityCognito} from "aws-lambda/trigger/appsync-resolver";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {apiVersion: '2024-06-20'});
@@ -10,7 +10,7 @@ export const handler: Schema["stripeCreateCheckoutSession"]["functionHandler"] =
     console.log('Stripe Create Checkout Session Event:', JSON.stringify(event, null, 2));
     console.log('Context:', JSON.stringify(context, null, 2));
 
-    const frontendUrl = process.env.FRONTEND_URL ?? 'https://google.com';
+    const frontendUrl = process.env.FRONTEND_URL;
 
     try {
         const identity = event?.identity as AppSyncIdentityCognito;
@@ -25,8 +25,8 @@ export const handler: Schema["stripeCreateCheckoutSession"]["functionHandler"] =
             mode: 'subscription',
             success_url: `${frontendUrl}/subscription-success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${frontendUrl}/checkout-cancelled`,
-            client_reference_id: identity.username, // Assuming you're passing userId in the context
-            customer_email: 'iskandar100@gmail.com'
+            client_reference_id: identity.username,
+            customer_email: event.arguments.email,
         });
 
         return {
