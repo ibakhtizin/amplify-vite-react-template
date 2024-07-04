@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from 'react-hot-toast';
-import {useSubscription} from "@/hooks/useSubscription.ts";
+// import {useSubscription} from "@/hooks/useSubscription.ts";
 
 interface SubscriptionDialogProps {
     isOpen: boolean;
@@ -12,12 +12,12 @@ interface SubscriptionDialogProps {
 
 export function SubscriptionDialog({ isOpen, onClose }: SubscriptionDialogProps) {
     const [isLoading, setIsLoading] = useState(false);
-    const { upgradeToProAction } = useSubscription();
+    // const { upgradeToProAction } = useSubscription();
 
     const handleUpgrade = async () => {
         setIsLoading(true);
         try {
-            await upgradeToProAction();
+            // await upgradeToProAction();
             // The user will be redirected to Stripe Checkout if successful
         } catch (error) {
             console.error('Error initiating upgrade:', error);

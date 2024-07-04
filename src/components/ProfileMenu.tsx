@@ -11,7 +11,7 @@ import {
 import { AuthUser } from "aws-amplify/auth";
 import { Badge } from "@/components/ui/badge.tsx";
 import { useFeatureFlags } from '../hooks/useFeatureFlags';
-import {useSubscription} from "@/hooks/useSubscription.ts";
+// import {useSubscription} from "@/hooks/useSubscription.ts";
 
 interface ProfileMenuProps {
     user: AuthUser | undefined;
@@ -20,7 +20,8 @@ interface ProfileMenuProps {
 
 export function ProfileMenu({ user, signOut }: ProfileMenuProps) {
     const { enforceSubscription } = useFeatureFlags();
-    const { isPro } = useSubscription();
+    // const { isPro } = useSubscription();
+    const isPro = true;
 
     return (
         <DropdownMenu>

@@ -10,7 +10,7 @@ export const handler: Schema["stripeCreateCheckoutSession"]["functionHandler"] =
     console.log('Stripe Create Checkout Session Event:', JSON.stringify(event, null, 2));
     console.log('Context:', JSON.stringify(context, null, 2));
 
-    const frontendUrl = process.env.FRONTEND_URL;
+    // const frontendUrl = process.env.FRONTEND_URL;
 
     try {
         const identity = event?.identity as AppSyncIdentityCognito;
@@ -23,8 +23,8 @@ export const handler: Schema["stripeCreateCheckoutSession"]["functionHandler"] =
                 },
             ],
             mode: 'subscription',
-            success_url: `${frontendUrl}/subscription-success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${frontendUrl}/checkout-cancelled`,
+            success_url: `${event.arguments.host}/subscription-success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${event.arguments.host}/checkout-cancelled`,
             client_reference_id: identity.username,
             customer_email: event.arguments.email,
         });

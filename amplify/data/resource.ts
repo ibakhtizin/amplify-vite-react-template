@@ -1,32 +1,21 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 import {stripeCheckoutHandler} from "../functions/stripe-create-checkout-session/resource";
+import RssFeed from "./models/rss-feed";
+import RssFeedItem from "./models/rss-feed-item";
 
 const schema = a.schema({
-    RssFeed: a
-        .model({
-            url: a.string().required(),
-            title: a.string(),
-            description: a.string(),
-            lastUpdated: a.datetime(),
-            feedLastUpdated: a.datetime(),
-            forwardingUrl: a.string(),
-            isActive: a.boolean().default(true),
-            ownerId: a.string(),
-        })
-        .authorization((allow) => [
-            allow.owner()
-        ]),
-
-    UserSubscription: a
-        .model({
-            userId: a.string().required(),
-            isPro: a.boolean().required(),
-            expiresAt: a.datetime(),
-            stripeCustomerId: a.string(),
-        })
-        .authorization((allow) => [
-            allow.owner()
-        ]),
+    RssFeed,
+    RssFeedItem,
+    // UserSubscription: a
+    //     .model({
+    //         userId: a.string().required(),
+    //         isPro: a.boolean().required(),
+    //         expiresAt: a.datetime(),
+    //         stripeCustomerId: a.string(),
+    //     })
+    //     .authorization((allow) => [
+    //         allow.owner()
+    //     ]),
 
 
     StripeCheckoutSessionResponse: a.customType({
@@ -38,6 +27,7 @@ const schema = a.schema({
     stripeCreateCheckoutSession: a
         .mutation()
         .arguments({
+            host: a.string().required(),
             email: a.string().required(),
         })
         .returns(a.ref('StripeCheckoutSessionResponse'))

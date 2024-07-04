@@ -4,18 +4,19 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { SubscriptionDialog } from './SubscriptionDialog';
-import { useSubscription } from '../hooks/useSubscription';
+// import { useSubscription } from '../hooks/useSubscription';
 import { useFeatureFlags } from '../hooks/useFeatureFlags';
 
 export function AddRssFeedForm() {
     const [newRssFeedUrl, setNewRssFeedUrl] = useState("");
     const [inputError, setInputError] = useState("");
     const { addRssFeed, rssFeeds } = useRssFeeds();
-    const { isPro } = useSubscription();
+    // const { isPro } = useSubscription();
     const [isSubscriptionDialogOpen, setIsSubscriptionDialogOpen] = useState(false);
     const { enforceSubscription } = useFeatureFlags();
 
-    const feedLimit = isPro || !enforceSubscription ? Infinity : 2;
+    // const feedLimit = isPro || !enforceSubscription ? Infinity : 2;
+    const feedLimit = !enforceSubscription ? Infinity : 2;
     const canAddMoreFeeds = (rssFeeds?.length || 0) < feedLimit;
 
     const validateAndAddRssFeed = () => {
