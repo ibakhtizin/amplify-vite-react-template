@@ -8,14 +8,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 Amplify.configure(outputs);
-const existingConfig = Amplify.getConfig();
-Amplify.configure({
-    ...existingConfig,
-    API: {
-        ...existingConfig.API,
-        REST: outputs.custom.API,
-    },
-});
 
 const queryClient = new QueryClient();
 
