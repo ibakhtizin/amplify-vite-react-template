@@ -6,22 +6,11 @@ import RssFeedItem from "./models/rss-feed-item";
 const schema = a.schema({
     RssFeed,
     RssFeedItem,
-    // UserSubscription: a
-    //     .model({
-    //         userId: a.string().required(),
-    //         isPro: a.boolean().required(),
-    //         expiresAt: a.datetime(),
-    //         stripeCustomerId: a.string(),
-    //     })
-    //     .authorization((allow) => [
-    //         allow.owner()
-    //     ]),
-
-
     StripeCheckoutSessionResponse: a.customType({
         sessionId: a.string(),
         url: a.string()
     }),
+    // Define new model Named RssFeedItemAIResponse
 
     // Define your mutation
     stripeCreateCheckoutSession: a
