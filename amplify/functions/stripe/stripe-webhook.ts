@@ -1,9 +1,9 @@
 import Stripe from 'stripe';
 import type { APIGatewayProxyHandler } from "aws-lambda";
-import { generateClient } from 'aws-amplify/data';
-import { type Schema } from '../../data/resource';
+// import { generateClient } from 'aws-amplify/data';
+// import { type Schema } from '../../data/resource';
 
-const client = generateClient<Schema>();
+// const client = generateClient<Schema>();
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {apiVersion: '2024-06-20'});
 
@@ -24,9 +24,9 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const stripeEvent = stripe.webhooks.constructEvent(event.body!, sig, webhookSecret);
 
     console.log(stripeEvent.type)
-    const { data: subscriptions, errors } = await client.models.UserSubscription.list();
-    console.log('subscriptions:', subscriptions);
-    console.log('errors:', errors);
+    // const { data: subscriptions, errors } = await client.models.UserSubscription.list();
+    // console.log('subscriptions:', subscriptions);
+    // console.log('errors:', errors);
 
     switch (stripeEvent.type) {
         case 'checkout.session.completed':
@@ -49,6 +49,6 @@ export const handler: APIGatewayProxyHandler = async (event) => {
             "Access-Control-Allow-Origin": "*", // Restrict this to domains you trust
             "Access-Control-Allow-Headers": "*", // Specify only the headers you need to allow
         },
-        body: JSON.stringify(`Hello from myFunction! ${subscriptions.length}`),
+        body: JSON.stringify(`Hello from myFunction!`),
     };
 };
